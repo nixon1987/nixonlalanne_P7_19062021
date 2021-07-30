@@ -66,6 +66,7 @@ function login(req, res) {
                   res.status(200).json({
                     message: "Authentification ok!",
                     token: token,
+                    userId:user.id,
                   });
                 }
               );
