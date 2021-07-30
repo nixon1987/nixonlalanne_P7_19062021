@@ -1,20 +1,52 @@
-
 <template>
   <div class="card">
     <h1 class="card__title" v-if="mode == 'login'">Connexion</h1>
     <h1 class="card__title" v-else>Inscription</h1>
-    <p class="card__subtitle" v-if="mode == 'login'">Tu n'as pas encore de compte ? <span class="card__action" @click="switchToCreateAccount()">Créer un compte</span></p>
-    <p class="card__subtitle" v-else>Tu as déjà un compte ? <span class="card__action" @click="switchToLogin()">Se connecter</span></p>
+    <p class="card__subtitle" v-if="mode == 'login'">
+      Tu n'as pas encore de compte ?
+      <span class="card__action" @click="switchToCreateAccount()"
+        >Créer un compte</span
+      >
+    </p>
+    <p class="card__subtitle" v-else>
+      Tu as déjà un compte ?
+      <span class="card__action" @click="switchToLogin()">Se connecter</span>
+    </p>
     <div class="form-row">
-      <input v-model="email" class="form-row__input" type="text" placeholder="Adresse mail"/>
+      <input
+        v-model="email"
+        class="form-row__input"
+        type="text"
+        placeholder="Adresse mail"
+      />
     </div>
     <div class="form-row" v-if="mode == 'create'">
-      <input v-model="prenom" class="form-row__input" type="text" placeholder="Prénom"/>
-      <input v-model="nom" class="form-row__input" type="text" placeholder="Nom"/>
-      <input v-model="role" class="form-row__input" type="text" placeholder="Role"/>
+      <input
+        v-model="prenom"
+        class="form-row__input"
+        type="text"
+        placeholder="Prénom"
+      />
+      <input
+        v-model="nom"
+        class="form-row__input"
+        type="text"
+        placeholder="Nom"
+      />
+      <input
+        v-model="role"
+        class="form-row__input"
+        type="text"
+        placeholder="Role"
+      />
     </div>
     <div class="form-row">
-      <input v-model="mot_de_passe" class="form-row__input" type="password" placeholder="Mot de passe"/>
+      <input
+        v-model="mot_de_passe"
+        class="form-row__input"
+        type="password"
+        placeholder="Mot de passe"
+      />
     </div>
     <div class="form-row" v-if="mode == 'login' && status == 'error_login'">
       Adresse mail et/ou mot de passe invalide
@@ -23,42 +55,59 @@
       Adresse mail déjà utilisée
     </div>
     <div class="form-row">
-      <button @click="login()" class="button" :class="{'button--disabled' : !validatedFields}" v-if="mode == 'login'">
+      <button
+        @click="login()"
+        class="button"
+        :class="{ 'button--disabled': !validatedFields }"
+        v-if="mode == 'login'"
+      >
         <span v-if="status == 'loading'">Connexion en cours...</span>
         <span v-else>Connexion</span>
       </button>
-      <button @click="createAccount()" class="button" :class="{'button--disabled' : !validatedFields}" v-else>
+      <button
+        @click="createAccount()"
+        class="button"
+        :class="{ 'button--disabled': !validatedFields }"
+        v-else
+      >
         <span v-if="status == 'loading'">Création en cours...</span>
         <span v-else>Créer mon compte</span>
       </button>
     </div>
+    <img src="../assets/icon-above-font.png" alt="" />
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
-  name: 'Login',
-  data: function () {
+  name: "Login",
+  data: function() {
     return {
-      mode: 'login',
-      email: '',
-      prenom: '',
-      nom: '',
-      mot_de_passe: '',
-      role:'',
-    }
+      mode: "login",
+      email: "",
+      prenom: "",
+      nom: "",
+      mot_de_passe: "",
+      role: "",
+    };
   },
-  mounted: function () {
+  mounted: function() {
     if (this.$store.state.user.userId != -1) {
-      this.$router.push('/');
-      return ;
+      this.$router.push("/");
+      return;
     }
   },
   computed: {
-    validatedFields: function () {
-      if (this.mode == 'create') {
-        if (this.email != "" && this.prenom != "" && this.nom != "" && this.mot_de_passe != ""&& this.role != "") {
+    validatedFields: function() {
+      if (this.mode == "create") {
+        if (
+          this.email != "" &&
+          this.prenom != "" &&
+          this.nom != "" &&
+          this.mot_de_passe != "" &&
+          this.role != ""
+        ) {
           return true;
         } else {
           return false;
@@ -71,63 +120,132 @@ export default {
         }
       }
     },
-    ...mapState(['status'])
+    ...mapState(["status"]),
   },
   methods: {
-    switchToCreateAccount: function () {
-      this.mode = 'create';
+    switchToCreateAccount: function() {
+      this.mode = "create";
     },
-    switchToLogin: function () {
-      this.mode = 'login';
+    switchToLogin: function() {
+      this.mode = "login";
     },
-    login: function () {
+    login: function() {
       const self = this;
-      this.$store.dispatch('login', {
-        email: this.email,
-        mot_de_passe: this.mot_de_passe,
-      }).then(function () {
-        self.$router.push('/Posts');
-      }, function (error) {
-        console.log(error);
-      })
+      this.$store
+        .dispatch("login", {
+          email: this.email,
+          mot_de_passe: this.mot_de_passe,
+        })
+        .then(
+          function() {
+            self.$router.push("/Posts");
+          },
+          function(error) {
+            console.log(error);
+          }
+        );
     },
-    createAccount: function () {
+    createAccount: function() {
       const self = this;
-      this.$store.dispatch('createAccount', {
-        email: this.email,
-        nom: this.nom,
-        prenom: this.prenom,
-        mot_de_passe: this.mot_de_passe,
-        role: this.role,
-      }).then(function () {
-        self.login();
-      }, function (error) {
-        console.log(error);
-      })
+      this.$store
+        .dispatch("createAccount", {
+          email: this.email,
+          nom: this.nom,
+          prenom: this.prenom,
+          mot_de_passe: this.mot_de_passe,
+          role: this.role,
+        })
+        .then(
+          function() {
+            self.login();
+          },
+          function(error) {
+            console.log(error);
+          }
+        );
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
-  .form-row {
-    display: flex;
-    margin: 16px 0px;
-    gap:16px;
-    flex-wrap: wrap;
-  }
-  .form-row__input {
-    padding:8px;
-    border: none;
-    border-radius: 8px;
-    background:#f2f2f2;
-    font-weight: 500;
-    font-size: 16px;
-    flex:1;
-    min-width: 100px;
-    color: black;
-  }
-  .form-row__input::placeholder {
-    color:#aaaaaa;
-  }
-</style>>
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;800&display=swap");
+* {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+.card {
+  max-width: 100%;
+  width: 540px;
+  border-radius: 16px;
+  padding: 32px;
+  margin: 1rem auto;
+}
+.card__title {
+  text-align: center;
+  font-weight: 800;
+}
+.card__subtitle {
+  text-align: center;
+  color: #666;
+  font-weight: 500;
+}
+.button {
+  background: lightcoral;
+  color: white;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 15px;
+  border: none;
+  width: 100%;
+  padding: 16px;
+  transition: 0.4s;
+}
+.card__action {
+  color: lightcoral;
+  text-decoration: underline;
+}
+.card__action:hover {
+  cursor: pointer;
+}
+.button:hover {
+  cursor: pointer;
+  background: lightcoral;
+}
+.button--disabled {
+  background: #cecece;
+  color: #ececec;
+}
+.button--disabled:hover {
+  cursor: not-allowed;
+  background: #cecece;
+}
+
+.form-row {
+  display: flex;
+  margin: 16px 0px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.form-row__input {
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: #f2f2f2;
+  font-weight: 500;
+  font-size: 16px;
+  flex: 1;
+  min-width: 100px;
+  color: black;
+}
+.form-row__input::placeholder {
+  color: lightcoral;
+}</style
+>>

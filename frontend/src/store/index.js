@@ -4,7 +4,7 @@ import { createStore } from "vuex";
 const axios = require("axios");
 
 const instance = axios.create({
-  baseURL: "http://localhost:5000/user",
+  baseURL: "http://localhost:5000",
 });
 
 let user = localStorage.getItem("user");
@@ -61,7 +61,7 @@ const store = createStore({
       commit("setStatus", "loading");
       return new Promise((resolve, reject) => {
         instance
-          .post("/login", userInfos)
+          .post("/user/login", userInfos)
           .then(function(response) {
             commit("setStatus", "");
             commit("logUser", response.data);
@@ -78,7 +78,7 @@ const store = createStore({
       return new Promise((resolve, reject) => {
         commit;
         instance
-          .post("/createAccount", userInfos)
+          .post("/user/createAccount", userInfos)
           .then(function(response) {
             commit("setStatus", "created");
             resolve(response);
@@ -91,7 +91,7 @@ const store = createStore({
     },
     getUserInfos: ({ commit }) => {
       instance
-        .post("/infos")
+        .get("/posts")
         .then(function(response) {
           commit("userInfos", response.data.infos);
         })
