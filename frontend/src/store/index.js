@@ -1,4 +1,3 @@
-
 import { createStore } from "vuex";
 
 const axios = require("axios");
@@ -41,7 +40,17 @@ const store = createStore({
       state.status = status;
     },
     logUser: function(state, user) {
-      instance.defaults.headers.common["Authorization"] = user.token;
+      axios.interceptors.request.use(
+        (config) => {
+          config.headers.Authorization = "Bearer " + user.token;
+          return config;
+        },
+        (error) => {
+          return Promise.reject(error);
+        }
+      );
+      // instance.defaults.headers.common["Authorization"] =
+      //   "Bearer " + user.token;
       localStorage.setItem("user", JSON.stringify(user));
       state.user = user;
     },

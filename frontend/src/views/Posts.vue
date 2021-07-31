@@ -1,49 +1,31 @@
 <template>
-  <!-- <div class="conteneur">
-    <p>nixon</p>
-    <div class="identification">
-      <p>Bienvenue dans VOTRE espace</p>
-      <button @click="logout()" class="button">
-        Déconnexion
-      </button>
-    </div>
-    <div class="forum__vue">
-      <h1 v-for="post of posts" :key="post.id">titre</h1>
-      <img src="../assets/logo.png" alt="logo_groupomania" />
-      <p>{{post.contenu}}</p>
-      <h1 v-for="post of posts" :key="post.id">titre</h1>
-      <img src="../assets/logo.png" alt="logo_groupomania" />
-      <p>contenu</p>
-      <h1 v-for="post of posts" :key="post.id">titre</h1>
-      <img src="../assets/logo.png" alt="logo_groupomania" />
-      <p>contenu</p>
-    </div>
-  </div> -->
-  <div class="user"><i class="far fa-user"></i>Nixon lalanne</div>
-    <div class="header">
-      <img src="../assets/icon-left-font.png" alt="logo_groupomania" />
-      <h1>Bienvenue dans votre espace d'échange Goupomania</h1>
-    </div>
-    <div class="buttons__header">
-      <button class="btn">Créer un post</button>
-      <button @click="logout()" class="btn">Déconnexion</button>
-    </div>
-    <div class="conteneur">
-      <div class="left__side"></div>
-      <div class="middle__side">
-        <div class="posts">
-          <p v-for="post of posts" :key="post.id" class="titre">{{post.titre}}</p>
-          <!-- <img class="image" src="./image/Capture3.PNG" alt="" /> -->
-          <p class="contenu">Contenu</p>
-          <p class="commentaire">comment</p>
-          <div class="like">
-            <span><i class="far fa-thumbs-up"></i></span>
-            <span><i class="far fa-thumbs-down"></i></span>
-          </div>
+  <div v-for="user in users" :key="user.id" class="user">
+    <i class="far fa-user"></i>{{ user.nom }}
+  </div>
+  <div class="header">
+    <img src="../assets/icon-left-font.png" alt="logo_groupomania" />
+    <h1>Bienvenue!!</h1>
+  </div>
+  <div class="buttons__header">
+    <button @click="createPost()" class="btn">Créer un post</button>
+    <button @click="logout()" class="btn">Déconnexion</button>
+  </div>
+  <div class="conteneur">
+    <div class="left__side"></div>
+    <div class="middle__side">
+      <div class="posts" v-for="post in posts" :key="post.id">
+        <p class="titre">{{ post.titre }}</p>
+        <img class="image" src="../assets/logo.png" alt="logo_groupomania" />
+        <p class="contenu">{{ post.contenu }}</p>
+        <p class="commentaire">{{ post.comment }}</p>
+        <div class="like">
+          <span><i class="far fa-thumbs-up"></i></span>
+          <span><i class="far fa-thumbs-down"></i></span>
         </div>
       </div>
-      <div class="right__side"></div>
     </div>
+    <div class="right__side"></div>
+  </div>
 </template>
 
 <script>
@@ -55,7 +37,6 @@ export default {
   data() {
     return {
       posts: [""],
-      users:[""]
     };
   },
 
@@ -72,27 +53,24 @@ export default {
       user: "userInfos",
     }),
   },
-
+  async created() {
+    const responsePosts = await axios.get("http://localhost:5000/posts");
+    this.posts = responsePosts.data;
+  },
   methods: {
-    created() {
-      axios
-        .get("http://localhost:5000/posts")
-        .then((res)=> res.data)
-        .then((res)=> console.log(res))
-        // .then((reponse) => (this.posts = reponse.data));
-        
-        
-    },
     logout: function() {
       this.$store.commit("logout");
       this.$router.push("/");
+    },
+
+    createPost: function() {
+      this.$router.push("/CreatePost");
     },
   },
 };
 </script>
 
 <style scoped>
-
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
 
 * {
@@ -113,13 +91,12 @@ export default {
   padding: 2rem;
 }
 
-
 .user {
   display: flex;
   align-items: baseline;
 }
 
-.header img{
+.header img {
   width: 15rem;
 }
 
@@ -177,8 +154,7 @@ export default {
   display: grid;
   width: 70vh;
   height: 40vh;
-  margin: 0 auto;
-  grid-gap: 10px 10px;
+  margin: 5rem auto;
   align-items: center;
   justify-items: center;
   grid-template-columns: repeat(2, 1fr);
@@ -246,5 +222,4 @@ export default {
   width: 10rem;
   height: 3rem;
 } */
-
 </style>
