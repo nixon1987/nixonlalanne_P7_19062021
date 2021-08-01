@@ -15,7 +15,9 @@ if (!user) {
 } else {
   try {
     user = JSON.parse(user);
-    instance.defaults.headers.common["Authorization"] = user.token;
+    instance.defaults.Authorization = "Bearer " + user.token;
+
+    // instance.defaults.headers.common["Authorization"] = user.token;
   } catch (ex) {
     user = {
       userId: -1,

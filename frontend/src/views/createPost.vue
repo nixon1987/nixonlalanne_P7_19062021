@@ -6,10 +6,16 @@
     <div class="header">
       <h2>Formulaire de création de poste</h2>
     </div>
-    <form action="post" id="form" class="form">
+    <form action="post" id="form" class="form" @submit="onUpload">
       <div class="form__control success">
         <label for="title">Titre</label>
-        <input type="text" placeholder="Titre" id="Titre" required />
+        <input
+          type="text"
+          placeholder="Titre"
+          id="Titre"
+          v-model="titre"
+          required
+        />
         <i class="fa fa-check" aria-hidden="true"></i>
         <i class="fas fa-exclamation-circle"></i>
         <small>Error message</small>
@@ -24,7 +30,13 @@
       </div>
       <div class="form__control">
         <label for="contenu">contenu du poste</label>
-        <input type="text" placeholder="contenu" id="adresse" required />
+        <input
+          type="text"
+          placeholder="contenu"
+          v-model="contenu"
+          id="adresse"
+          required
+        />
         <i class="fa fa-check" aria-hidden="true"></i>
         <i class="fas fa-exclamation-circle"></i>
         <small>Error message</small>
@@ -37,11 +49,13 @@
 import axios from "axios";
 
 export default {
-  name: "SimpleUpload",
+  name: "createPost",
   data() {
     return {
+      titre: "",
       file: "",
       photo: "",
+      contenu: "",
     };
   },
 
@@ -52,13 +66,30 @@ export default {
     onFileSelected(event) {
       this.selectedFile = event.target.files[0];
     },
-    onUpload() {
-      const fd = new FormData();
-      fd.append("image", this.selectedFile, this.selectedFile.name);
+    onUpload(e) {
+      e.preventDefault();
+      const userId = JSON.parse(localStorage.getItem("user"))?.userId;
+      const token = JSON.parse(localStorage.getItem("user"))?.token;
+
+      var model = JSON.stringify({
+        titre: this.titre,
+        contenu: this.contenu,
+        userId: userId,
+      });
+      var data = new FormData();
+      data.append("image", this.selectedFile);
+      data.append("post", model);
+
       axios
-        .post("http://localhost:5000/images/upload", fd)
+        .post("http://localhost:5000/posts", data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: "Bearer " + token,
+          },
+        })
         .then((res) => {
           console.log(res);
+          this.$router.push("/posts");
         })
         .catch((err) => {
           console.log(err);

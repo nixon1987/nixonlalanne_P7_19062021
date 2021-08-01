@@ -15,9 +15,18 @@
     <div class="middle__side">
       <div class="posts" v-for="post in posts" :key="post.id">
         <p class="titre">{{ post.titre }}</p>
-        <img class="image" src="../assets/logo.png" alt="logo_groupomania" />
+        <img
+          class="image"
+          :src="'http://localhost:5000/' + post.image_url"
+          alt="logo_groupomania"
+        />
         <p class="contenu">{{ post.contenu }}</p>
-        <p class="commentaire">{{ post.comment }}</p>
+        <span class="card__action" @click="switchToCreateAccount()"
+          >commentaire</span
+        >
+        <div v-if="mode == 'create'">
+          <p></p>
+        </div>
         <div class="like">
           <span><i class="far fa-thumbs-up"></i></span>
           <span><i class="far fa-thumbs-down"></i></span>
@@ -65,6 +74,10 @@ export default {
 
     createPost: function() {
       this.$router.push("/CreatePost");
+    },
+
+    switchToCreateAccount: function() {
+      this.mode = "create";
     },
   },
 };
@@ -183,43 +196,8 @@ export default {
   grid-area: like;
 }
 
-/* .forum__vue {
-  display: flex;
-  flex-direction: column;
-  margin: 5rem auto;
+.card__action {
+  color: lightcoral;
+  text-decoration: underline;
 }
-
-.forum__vue img {
-  width: 30%;
-  object-fit: cover;
-  align-self: center;
-}
-
-.forum__vue h1 {
-  align-self: center;
-}
-
-.forum__vue p {
-  align-self: center;
-  margin-bottom: 10rem;
-}
-
-.identification {
-  display: flex;
-  margin: 2rem 5rem;
-  justify-content: space-between;
-}
-
-.button {
-  height: 2rem;
-  background: lightcoral;
-  border-radius: 8px;
-  font-weight: 800;
-  font-size: 15px;
-  border: none;
-  padding: 16px;
-  color: white;
-  width: 10rem;
-  height: 3rem;
-} */
 </style>
