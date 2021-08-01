@@ -1,9 +1,10 @@
 const models = require("../models");
+const user = require("../controllers/post.controller")
 
 function upload(req, res) {
   if (req.file.filename) {
     image = {
-      userId: 9,
+      userId: user.id,
       image: req.file.filename,
     };
     models.Image.create(image);

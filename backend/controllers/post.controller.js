@@ -1,16 +1,16 @@
 const models = require("../models");
 
-
 // save on db
 function save(req, res) {
+  console.log(req);
+  const reqPost = JSON.parse(req.body.post);
+  // console.log(req);
   const post = {
-    titre: req.body.titre,
-    contenu: req.body.contenu,
-    imageUrl: req.body.image_Url,
-    categorie: req.body.categorie,
-    userId: req.user.userId,
+    titre: reqPost.titre,
+    contenu: reqPost.contenu,
+    image_url: req.file.path,
+    userId: reqPost.userId,
   };
-  
 
   models.Post.create(post)
     .then((result) => {
@@ -87,9 +87,7 @@ function update(req, res) {
   });
 }
 
-
 // delete post
-
 
 function destroyPost(req, res) {
   models.Post.findOne({ where: { id: req.params.id } })
@@ -106,9 +104,7 @@ function destroyPost(req, res) {
 
 // likecount
 
-function likeCount (req, res){
-  
-}
+function likeCount(req, res) {}
 
 module.exports = {
   save: save,
