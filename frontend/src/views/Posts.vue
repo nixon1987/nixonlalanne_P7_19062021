@@ -1,10 +1,9 @@
 <template>
-  <div v-for="user in users" :key="user.id" class="user">
-    <i class="far fa-user"></i>{{ user.nom }}
-  </div>
   <div class="header">
     <img src="../assets/icon-left-font.png" alt="logo_groupomania" />
-    <h1>Bienvenue!!</h1>
+    <h1>
+      Bienvenue {{ $store.state.user.nom + "\t" + $store.state.user.prenom }} !
+    </h1>
   </div>
   <div class="buttons__header">
     <button @click="createPost()" class="btn">Créer un post</button>
@@ -14,23 +13,7 @@
     <div class="left__side"></div>
     <div class="middle__side">
       <div class="posts" v-for="post in posts" :key="post.id">
-        <p class="titre">{{ post.titre }}</p>
-        <img
-          class="image"
-          :src="'http://localhost:5000/' + post.image_url"
-          alt="logo_groupomania"
-        />
-        <p class="contenu">{{ post.contenu }}</p>
-        <span class="card__action" @click="switchToCreateAccount()"
-          >commentaire</span
-        >
-        <div v-if="mode == 'create'">
-          <p></p>
-        </div>
-        <div class="like">
-          <span><i class="far fa-thumbs-up"></i></span>
-          <span><i class="far fa-thumbs-down"></i></span>
-        </div>
+        <Post v-bind:post="post" />
       </div>
     </div>
     <div class="right__side"></div>
@@ -40,12 +23,18 @@
 <script>
 import { mapState } from "vuex";
 import axios from "axios";
+import Post from "../components/Post.vue";
 export default {
   name: "Posts",
+  components: {
+    Post,
+  },
 
   data() {
     return {
+      comment: "",
       posts: [""],
+      users: [""],
     };
   },
 
@@ -65,7 +54,12 @@ export default {
   async created() {
     const responsePosts = await axios.get("http://localhost:5000/posts");
     this.posts = responsePosts.data;
+    console.log(this.$store.state.user.nom);
+    // const responseUsers = await axios.get("http://localhost:5000/user/login");
+    // console.log(responseUsers);
+    // this.posts = responseUsers.data;
   },
+
   methods: {
     logout: function() {
       this.$store.commit("logout");
@@ -74,6 +68,10 @@ export default {
 
     createPost: function() {
       this.$router.push("/CreatePost");
+    },
+    addComment(postId) {
+      console.log(this.comment);
+      console.log(postId);
     },
 
     switchToCreateAccount: function() {
@@ -170,7 +168,7 @@ export default {
   margin: 5rem auto;
   align-items: center;
   justify-items: center;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   grid-template-rows: repeat(4, 1fr);
   grid-template-areas:
     "titre titre "
@@ -194,10 +192,17 @@ export default {
 
 .like {
   grid-area: like;
+  display: flex;
+  flex-direction: column;
 }
 
 .card__action {
   color: lightcoral;
   text-decoration: underline;
+}
+
+.image__like {
+  display: flex;
+  align-items: flex-end;
 }
 </style>
