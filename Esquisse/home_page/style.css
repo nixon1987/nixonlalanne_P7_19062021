@@ -7,15 +7,15 @@
   font-family: "Poppins", sans-serif;
 }
 
-.header {
-  margin: 1rem auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.header h1{
+display: flex;
+justify-content: center;
+margin: 1rem 0;
 }
 
-.header img{
-  width: 15rem;
+
+.header img {
+width: 10rem;
 }
 
 .buttons__header {
@@ -68,7 +68,7 @@
   justify-content: center;
 }
 
-.posts {
+.post {
   display: grid;
   width: 70vh;
   height: 40vh;
@@ -77,16 +77,25 @@
   align-items: center;
   justify-items: center;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
   grid-template-areas:
+    "fa-times fa-times"
     "titre titre "
     "image image "
     "contenu contenu"
-    "commentaire like";
+    "commentaire commentaire";
 }
 
+.fa-times{
+    grid-area: fa-times;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
 .titre {
   grid-area: titre;
+  display: flex;
+  align-items: center;
 }
 .image {
   grid-area: image;
@@ -96,8 +105,26 @@
 }
 .commentaire {
   grid-area: commentaire;
+  width: 100%;
 }
 
 .like {
   grid-area: like;
+}
+
+.image__like {
+  display: flex;
+  align-items: flex-end;
+}
+
+.fa-check {
+  color: lightgreen;
+}
+
+.text {
+  width: 95%;
+  height: 2rem;
+  border-radius: 5px;
+  border: solid 1px lightgrey;
+  outline: none;
 }
