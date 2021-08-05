@@ -1,14 +1,21 @@
 <template>
   <div class="header">
-    <img src="../assets/icon-left-font.png" alt="logo_groupomania" />
-    <h1>
-      Bienvenue {{ $store.state.user.nom + "\t" + $store.state.user.prenom }} !
-    </h1>
+    <img
+      class="groupomania__logo"
+      src="../assets/icon-left-font.png"
+      alt="logo_groupomania"
+    />
+    <button class="btn" @click="createPost()">
+      <i class="far fa-edit"></i>
+    </button>
+    <button class="btn" @click="logout()">
+      <i class="fas fa-sign-in-alt"></i>
+    </button>
+    <button class="btn"><i class="fas fa-minus-circle"></i></button>
   </div>
-  <div class="buttons__header">
-    <button @click="createPost()" class="btn">Créer un post</button>
-    <button @click="logout()" class="btn">Déconnexion</button>
-  </div>
+  <h2 class="welcome">
+    Bienvenue {{ $store.state.user.prenom + "\t" + $store.state.user.nom }} !
+  </h2>
   <div class="conteneur">
     <div class="left__side"></div>
     <div class="middle__side">
@@ -55,9 +62,6 @@ export default {
     const responsePosts = await axios.get("http://localhost:5000/posts");
     this.posts = responsePosts.data;
     console.log(this.$store.state.user.nom);
-    // const responseUsers = await axios.get("http://localhost:5000/user/login");
-    // console.log(responseUsers);
-    // this.posts = responseUsers.data;
   },
 
   methods: {
@@ -91,118 +95,123 @@ export default {
   font-family: "Poppins", sans-serif;
 }
 
+/* header */
+
 .header {
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  width: auto;
   align-items: center;
+  grid-template-columns: 2fr 0.3fr 0.3fr 0.3fr;
+  grid-template-rows: repeat(1, 1fr);
+  grid-template-areas: "groupomania__logo fa-edit fa-sign-in-alt";
 }
 
-.fa-user {
-  padding: 2rem;
+.groupomania__logo {
+  justify-content: start;
 }
 
-.user {
-  display: flex;
-  align-items: baseline;
+.fa-sign-in-alt,
+.fa-times {
+  font-size: x-large;
+}
+
+.fa-edit,
+.fa-ellipsis-v,
+.fa-check,
+.fa-minus-circle {
+  font-size: x-large;
+}
+
+.fa-edit:hover,
+.fa-ellipsis-v:hover,
+.fa-check:hover {
+  color: green;
+}
+
+.fa-sign-in-alt:hover,
+.fa-times:hover,
+.fa-minus-circle:hover {
+  color: red;
+}
+
+.modifier {
+  padding: 5px;
 }
 
 .header img {
-  width: 15rem;
+  width: 10rem;
 }
 
-.buttons__header {
+h2 {
+  border-bottom: solid 3px lightsalmon;
+}
+
+/* header */
+
+/* titre */
+h2 {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
 }
-
-.btn {
-  border: solid 1px lightcoral;
-  font-size: 16px;
-  outline: none;
-  line-height: 1;
-  padding: 16px 30px;
-  border-radius: 10px;
-  background: white;
-  color: black;
-  cursor: pointer;
-  transition: all 0.2s linear;
-}
-
-.btn:hover {
-  background: lightcoral;
-  color: white;
-}
-
-.btn:active {
-  background: white;
-  color: lightcoral;
-}
+/* titre */
 
 /* middle */
 
 .conteneur {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  margin: 5rem auto;
-}
-
-.left__side,
-.right__side {
-  background: lightcoral;
-  border-radius: 10px;
-}
-
-.posts img {
-  width: 20rem;
-  height: 15rem;
-  object-fit: cover;
-  display: flex;
-  justify-content: center;
+  grid-template-columns: 1fr 4fr 1fr;
 }
 
 .posts {
-  display: grid;
-  width: 70vh;
-  height: 40vh;
-  margin: 5rem auto;
-  align-items: center;
-  justify-items: center;
-  grid-template-columns: repeat(1, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-  grid-template-areas:
-    "titre titre "
-    "image image "
-    "contenu contenu"
-    "commentaire like";
+  height: auto;
 }
 
-.titre {
-  grid-area: titre;
-}
-.image {
-  grid-area: image;
-}
-.contenu {
-  grid-area: contenu;
-}
-.commentaire {
-  grid-area: commentaire;
-}
-
-.like {
-  grid-area: like;
+.posts__header {
   display: flex;
-  flex-direction: column;
-}
-
-.card__action {
-  color: lightcoral;
-  text-decoration: underline;
+  justify-content: space-between;
+  margin: 2rem 0;
 }
 
 .image__like {
   display: flex;
-  align-items: flex-end;
+  justify-content: center;
+  object-fit: cover;
+  margin-bottom: 2rem;
+}
+
+.image__like img {
+  width: 60%;
+}
+
+.titre {
+  margin-top: 10rem auto;
+  display: flex;
+  justify-content: center;
+}
+
+.contenu {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.commentaire {
+  display: grid;
+  grid-template-columns: 10fr 1fr 1fr;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.text {
+  width: 100%;
+  height: 2rem;
+  border-radius: 5px;
+  border: solid 1px lightgrey;
+  outline: none;
+  justify-content: center;
+}
+
+.btn {
+  outline: none;
+  cursor: pointer;
 }
 </style>

@@ -1,22 +1,24 @@
 <template>
-  <div class="post">
-    <i class="fas fa-times"></i>
-    <p class="titre">{{ post.titre }}</p>
+  <div class="posts">
+    <div class="posts__header">
+      <button class="btn modifier"><i class="fas fa-ellipsis-v"></i></button>
+      <button class="btn" @click="deletePost(post.id)">
+        <i class="fas fa-times"></i>
+      </button>
+      
+    </div>
+    <h3 class="titre">{{ post.titre }}</h3>
     <div class="image__like">
       <img
         class="image"
         :src="'http://localhost:5000/' + post.image_url"
         alt="logo_groupomania"
       />
-      <div class="like">
-        <span><i class="far fa-thumbs-up">+5</i></span>
-        <span><i class="far fa-thumbs-down">+3</i></span>
-      </div>
     </div>
     <p class="contenu">
       {{ post.contenu }}
     </p>
-    <div class="commentaire comment-area">
+    <div class="commentaire ">
       <input
         v-model="comment"
         type="text"
@@ -26,8 +28,15 @@
       <button class="btn" @click="addComment(post.id)">
         <i class="fas fa-check"></i>
       </button>
-      <p v-for="comment in post.comments" :key="comment.id">
+    </div>
+    <div>
+      <p
+        class="comment-area"
+        v-for="comment in post.comments"
+        :key="comment.id"
+      >
         {{ comment.contenu }}
+        <span>date de publication</span>
       </p>
     </div>
   </div>
@@ -42,9 +51,32 @@ export default {
   data() {
     return {
       comment: "",
+      liked: false,
     };
   },
+  created() {
+    console.log("hello world");
+    const userid = this.$store.state.user.userId;
+    console.log(userid);
+  },
   methods: {
+    deletePost(postId) {
+      const token = JSON.parse(localStorage.getItem("user"))?.token;
+      axios
+        .delete("http://localhost:5000/posts/" + postId, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     addComment(postId) {
       const token = JSON.parse(localStorage.getItem("user"))?.token;
       const data = JSON.stringify({ contenu: this.comment, postId: postId });
@@ -76,139 +108,132 @@ export default {
   font-family: "Poppins", sans-serif;
 }
 
-.header h1 {
-  display: flex;
-  justify-content: center;
-  margin: 1rem 0;
+/* header */
+
+.header {
+  display: grid;
+  width: auto;
+  align-items: center;
+  grid-template-columns: 2fr 0.3fr 0.3fr;
+  grid-template-rows: repeat(1, 1fr);
+  grid-template-areas: "groupomania__logo fa-edit fa-sign-in-alt";
+}
+
+.groupomania__logo {
+  justify-content: start;
+}
+
+.fa-sign-in-alt,
+.fa-times {
+  font-size: x-large;
+}
+
+.fa-edit,
+.fa-ellipsis-v,
+.fa-check {
+  font-size: x-large;
+}
+
+.fa-edit:hover,
+.fa-ellipsis-v:hover,
+.fa-check:hover {
+  color: green;
+}
+
+.fa-sign-in-alt:hover,
+.fa-times:hover {
+  color: red;
+}
+
+.modifier {
+  padding: 5px;
 }
 
 .header img {
   width: 10rem;
 }
 
-.buttons__header {
+h2 {
+  border-bottom: solid 3px lightsalmon;
+}
+
+/* header */
+
+/* titre */
+h2 {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
 }
-
-.btn {
-  border: solid 1px lightcoral;
-  font-size: 16px;
-  outline: none;
-  line-height: 1;
-  padding: 16px 30px;
-  border-radius: 10px;
-  background: white;
-  color: black;
-  cursor: pointer;
-  transition: all 0.2s linear;
-}
-
-.btn:hover {
-  background: lightcoral;
-  color: white;
-}
-
-.btn:active {
-  background: white;
-  color: lightcoral;
-}
+/* titre */
 
 /* middle */
 
 .conteneur {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  margin: 5rem auto;
+  grid-template-columns: 1fr 4fr 1fr;
 }
 
-.left__side,
-.right__side {
-  background: lightcoral;
-  border-radius: 10px;
-}
-
-.posts img {
-  width: 20rem;
-  height: 15rem;
-  object-fit: cover;
+.posts__header {
   display: flex;
-  justify-content: center;
-}
-
-.posts {
-  display: grid;
-  width: 70vh;
-  height: 40vh;
-  margin: 0 auto;
-  grid-gap: 10px 10px;
-  align-items: center;
-  justify-items: center;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(5, 1fr);
-  grid-template-areas:
-    "fa-times fa-times"
-    "titre titre "
-    "image image "
-    "contenu contenu"
-    "commentaire commentaire";
-}
-
-.fa-times {
-  grid-area: fa-times;
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-}
-.titre {
-  grid-area: titre;
-  display: flex;
-  justify-content: center;
-}
-.image {
-  grid-area: image;
-}
-.contenu {
-  grid-area: contenu;
-}
-.commentaire {
-  grid-area: commentaire;
-  width: 100%;
-}
-
-.like {
-  grid-area: like;
-  display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  margin: 2rem 0;
 }
 
 .image__like {
   display: flex;
-  align-items: flex-end;
+  justify-content: center;
+  object-fit: cover;
+  margin-bottom: 2rem;
+}
+
+.image__like img {
+  width: 60%;
+}
+
+.titre {
+  margin-top: 10rem auto;
+  display: flex;
+  justify-content: center;
+}
+
+.contenu {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.commentaire {
+  display: grid;
+  grid-template-columns: 10fr 1fr 1fr;
+  margin-bottom: 0.5rem;
+  width: 100%;
 }
 
 .text {
-  width: 90%;
+  width: 100%;
   height: 2rem;
   border-radius: 5px;
   border: solid 1px lightgrey;
   outline: none;
+  justify-content: center;
 }
 
 .btn {
-  border: solid 1px lightcoral;
-  font-size: 10px;
   outline: none;
-  padding: 10px 10px;
-  border-radius: 10px;
-  background: white;
-  color: black;
   cursor: pointer;
-  transition: all 0.2s linear;
 }
 
-.btn:hover {
-  background: lightcoral;
-  color: white;
+.comment-area {
+  color: lightsalmon;
+  padding: 0.5rem 0;
 }
+
+.comment-area  span{
+display: flex;
+justify-content: flex-end;
+color: lightblue;
+font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+font-style: italic;
+}
+
+/* middle */
 </style>

@@ -105,8 +105,8 @@ export default {
           this.email != "" &&
           this.prenom != "" &&
           this.nom != "" &&
-          this.mot_de_passe != "" &&
-          this.role != ""
+          this.mot_de_passe != "" 
+          // this.role != ""
         ) {
           return true;
         } else {
